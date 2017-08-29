@@ -1,0 +1,26 @@
+﻿@model EquipmentManagementSystem.equ_category
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>equ_category</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.equ_cat_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.equ_cat_name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.equ_cat_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
