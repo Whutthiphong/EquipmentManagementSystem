@@ -1,0 +1,611 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="JAOModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="accountHistory">
+          <Key>
+            <PropertyRef Name="acc_his_id" />
+          </Key>
+          <Property Name="acc_his_id" Type="bigint" Nullable="false" />
+          <Property Name="acc_his_status" Type="int" />
+          <Property Name="acc_his_desc" Type="text" />
+          <Property Name="acc_id" Type="bigint" />
+          <Property Name="acc_amount_change" Type="money" />
+        </EntityType>
+        <EntityType Name="admin">
+          <Key>
+            <PropertyRef Name="admin_id" />
+          </Key>
+          <Property Name="admin_id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="admin_name" Type="varchar" MaxLength="50" />
+          <Property Name="admin_address" Type="varchar" MaxLength="50" />
+          <Property Name="admin_description" Type="text" />
+          <Property Name="admin_tell" Type="varchar" MaxLength="50" />
+          <Property Name="admin_idcard" Type="varchar" MaxLength="10" />
+          <Property Name="admin_username" Type="varchar" MaxLength="50" />
+          <Property Name="admin_password" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="borrow_dt">
+          <Key>
+            <PropertyRef Name="bor_id" />
+            <PropertyRef Name="roworder" />
+          </Key>
+          <Property Name="bor_id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="roworder" Type="int" Nullable="false" />
+          <Property Name="equ_id" Type="varchar" MaxLength="50" />
+          <Property Name="bor_amount" Type="int" />
+          <Property Name="bor_date" Type="datetime" />
+          <Property Name="bor_wxp" Type="datetime" />
+        </EntityType>
+        <EntityType Name="borrow_hd">
+          <Key>
+            <PropertyRef Name="bor_id" />
+          </Key>
+          <Property Name="bor_id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="mem_id" Type="varchar" MaxLength="50" />
+          <Property Name="admin_id" Type="varchar" MaxLength="50" />
+          <Property Name="create_date" Type="datetime" />
+        </EntityType>
+        <EntityType Name="equ_category">
+          <Key>
+            <PropertyRef Name="equ_cat_id" />
+          </Key>
+          <Property Name="equ_cat_id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="equ_cat_name" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="equipment">
+          <Key>
+            <PropertyRef Name="equ_id" />
+          </Key>
+          <Property Name="equ_id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="equ_name" Type="nvarchar" MaxLength="50" />
+          <Property Name="equ_cat_id" Type="varchar" MaxLength="50" />
+          <Property Name="equ_description" Type="varchar(max)" />
+          <Property Name="equ_amount" Type="int" />
+          <Property Name="equ_status" Type="nvarchar" MaxLength="2" />
+        </EntityType>
+        <EntityType Name="mAccount">
+          <Key>
+            <PropertyRef Name="acc_id" />
+          </Key>
+          <Property Name="acc_id" Type="bigint" Nullable="false" />
+          <Property Name="acc_name" Type="varchar" MaxLength="50" />
+          <Property Name="mem_id" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="memberType">
+          <Key>
+            <PropertyRef Name="mem_type_id" />
+          </Key>
+          <Property Name="mem_type_id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="mem_type_name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="mMember">
+          <Key>
+            <PropertyRef Name="mem_id" />
+          </Key>
+          <Property Name="mem_id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="mem_name" Type="varchar" MaxLength="50" />
+          <Property Name="mem_address_id" Type="int" />
+          <Property Name="mem_email" Type="varchar" MaxLength="50" />
+          <Property Name="mem_phone" Type="varchar" MaxLength="11" />
+          <Property Name="mem_idcard" Type="varchar" MaxLength="13" />
+          <Property Name="mem_type_id" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_accountHistory_accountHistory">
+          <End Role="mAccount" Type="Self.mAccount" Multiplicity="0..1" />
+          <End Role="accountHistory" Type="Self.accountHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mAccount">
+              <PropertyRef Name="acc_id" />
+            </Principal>
+            <Dependent Role="accountHistory">
+              <PropertyRef Name="acc_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_borrow_dt_borrow_hd1">
+          <End Role="borrow_hd" Type="Self.borrow_hd" Multiplicity="1" />
+          <End Role="borrow_dt" Type="Self.borrow_dt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="borrow_hd">
+              <PropertyRef Name="bor_id" />
+            </Principal>
+            <Dependent Role="borrow_dt">
+              <PropertyRef Name="bor_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_borrow_dt_equipment">
+          <End Role="equipment" Type="Self.equipment" Multiplicity="0..1" />
+          <End Role="borrow_dt" Type="Self.borrow_dt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="equipment">
+              <PropertyRef Name="equ_id" />
+            </Principal>
+            <Dependent Role="borrow_dt">
+              <PropertyRef Name="equ_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_borrow_hd_admin">
+          <End Role="admin" Type="Self.admin" Multiplicity="0..1" />
+          <End Role="borrow_hd" Type="Self.borrow_hd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="admin">
+              <PropertyRef Name="admin_id" />
+            </Principal>
+            <Dependent Role="borrow_hd">
+              <PropertyRef Name="admin_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_borrow_hd_mMember">
+          <End Role="mMember" Type="Self.mMember" Multiplicity="0..1" />
+          <End Role="borrow_hd" Type="Self.borrow_hd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mMember">
+              <PropertyRef Name="mem_id" />
+            </Principal>
+            <Dependent Role="borrow_hd">
+              <PropertyRef Name="mem_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_equipment_equ_category">
+          <End Role="equ_category" Type="Self.equ_category" Multiplicity="0..1" />
+          <End Role="equipment" Type="Self.equipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="equ_category">
+              <PropertyRef Name="equ_cat_id" />
+            </Principal>
+            <Dependent Role="equipment">
+              <PropertyRef Name="equ_cat_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mAccount_mMember">
+          <End Role="mMember" Type="Self.mMember" Multiplicity="0..1" />
+          <End Role="mAccount" Type="Self.mAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mMember">
+              <PropertyRef Name="mem_id" />
+            </Principal>
+            <Dependent Role="mAccount">
+              <PropertyRef Name="mem_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mMember_memberType">
+          <End Role="memberType" Type="Self.memberType" Multiplicity="0..1" />
+          <End Role="mMember" Type="Self.mMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="memberType">
+              <PropertyRef Name="mem_type_id" />
+            </Principal>
+            <Dependent Role="mMember">
+              <PropertyRef Name="mem_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="JAOModelStoreContainer">
+          <EntitySet Name="accountHistory" EntityType="Self.accountHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="admin" EntityType="Self.admin" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="borrow_dt" EntityType="Self.borrow_dt" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="borrow_hd" EntityType="Self.borrow_hd" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="equ_category" EntityType="Self.equ_category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="equipment" EntityType="Self.equipment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="mAccount" EntityType="Self.mAccount" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="memberType" EntityType="Self.memberType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="mMember" EntityType="Self.mMember" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_accountHistory_accountHistory" Association="Self.FK_accountHistory_accountHistory">
+            <End Role="mAccount" EntitySet="mAccount" />
+            <End Role="accountHistory" EntitySet="accountHistory" />
+          </AssociationSet>
+          <AssociationSet Name="FK_borrow_dt_borrow_hd1" Association="Self.FK_borrow_dt_borrow_hd1">
+            <End Role="borrow_hd" EntitySet="borrow_hd" />
+            <End Role="borrow_dt" EntitySet="borrow_dt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_borrow_dt_equipment" Association="Self.FK_borrow_dt_equipment">
+            <End Role="equipment" EntitySet="equipment" />
+            <End Role="borrow_dt" EntitySet="borrow_dt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_borrow_hd_admin" Association="Self.FK_borrow_hd_admin">
+            <End Role="admin" EntitySet="admin" />
+            <End Role="borrow_hd" EntitySet="borrow_hd" />
+          </AssociationSet>
+          <AssociationSet Name="FK_borrow_hd_mMember" Association="Self.FK_borrow_hd_mMember">
+            <End Role="mMember" EntitySet="mMember" />
+            <End Role="borrow_hd" EntitySet="borrow_hd" />
+          </AssociationSet>
+          <AssociationSet Name="FK_equipment_equ_category" Association="Self.FK_equipment_equ_category">
+            <End Role="equ_category" EntitySet="equ_category" />
+            <End Role="equipment" EntitySet="equipment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mAccount_mMember" Association="Self.FK_mAccount_mMember">
+            <End Role="mMember" EntitySet="mMember" />
+            <End Role="mAccount" EntitySet="mAccount" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mMember_memberType" Association="Self.FK_mMember_memberType">
+            <End Role="memberType" EntitySet="memberType" />
+            <End Role="mMember" EntitySet="mMember" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="JAOModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="accountHistory">
+          <Key>
+            <PropertyRef Name="acc_his_id" />
+          </Key>
+          <Property Name="acc_his_id" Type="Int64" Nullable="false" />
+          <Property Name="acc_his_status" Type="Int32" />
+          <Property Name="acc_his_desc" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="acc_id" Type="Int64" />
+          <Property Name="acc_amount_change" Type="Decimal" Precision="19" Scale="4" />
+          <NavigationProperty Name="mAccount" Relationship="Self.FK_accountHistory_accountHistory" FromRole="accountHistory" ToRole="mAccount" />
+        </EntityType>
+        <EntityType Name="admin">
+          <Key>
+            <PropertyRef Name="admin_id" />
+          </Key>
+          <Property Name="admin_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="admin_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="admin_address" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="admin_description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="admin_tell" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="admin_idcard" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="admin_username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="admin_password" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="borrow_hd" Relationship="Self.FK_borrow_hd_admin" FromRole="admin" ToRole="borrow_hd" />
+        </EntityType>
+        <EntityType Name="borrow_dt">
+          <Key>
+            <PropertyRef Name="bor_id" />
+            <PropertyRef Name="roworder" />
+          </Key>
+          <Property Name="bor_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="roworder" Type="Int32" Nullable="false" />
+          <Property Name="equ_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="bor_amount" Type="Int32" />
+          <Property Name="bor_date" Type="DateTime" Precision="3" />
+          <Property Name="bor_wxp" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="borrow_hd" Relationship="Self.FK_borrow_dt_borrow_hd1" FromRole="borrow_dt" ToRole="borrow_hd" />
+          <NavigationProperty Name="equipment" Relationship="Self.FK_borrow_dt_equipment" FromRole="borrow_dt" ToRole="equipment" />
+        </EntityType>
+        <EntityType Name="borrow_hd">
+          <Key>
+            <PropertyRef Name="bor_id" />
+          </Key>
+          <Property Name="bor_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="mem_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="admin_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="create_date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="admin" Relationship="Self.FK_borrow_hd_admin" FromRole="borrow_hd" ToRole="admin" />
+          <NavigationProperty Name="borrow_dt" Relationship="Self.FK_borrow_dt_borrow_hd1" FromRole="borrow_hd" ToRole="borrow_dt" />
+          <NavigationProperty Name="mMember" Relationship="Self.FK_borrow_hd_mMember" FromRole="borrow_hd" ToRole="mMember" />
+        </EntityType>
+        <EntityType Name="equ_category">
+          <Key>
+            <PropertyRef Name="equ_cat_id" />
+          </Key>
+          <Property Name="equ_cat_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="equ_cat_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="equipments" Relationship="Self.FK_equipment_equ_category" FromRole="equ_category" ToRole="equipment" />
+        </EntityType>
+        <EntityType Name="equipment">
+          <Key>
+            <PropertyRef Name="equ_id" />
+          </Key>
+          <Property Name="equ_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="equ_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="equ_cat_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="equ_description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="equ_amount" Type="Int32" />
+          <Property Name="equ_status" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="borrow_dt" Relationship="Self.FK_borrow_dt_equipment" FromRole="equipment" ToRole="borrow_dt" />
+          <NavigationProperty Name="equ_category" Relationship="Self.FK_equipment_equ_category" FromRole="equipment" ToRole="equ_category" />
+        </EntityType>
+        <EntityType Name="mAccount">
+          <Key>
+            <PropertyRef Name="acc_id" />
+          </Key>
+          <Property Name="acc_id" Type="Int64" Nullable="false" />
+          <Property Name="acc_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mem_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="accountHistories" Relationship="Self.FK_accountHistory_accountHistory" FromRole="mAccount" ToRole="accountHistory" />
+          <NavigationProperty Name="mMember" Relationship="Self.FK_mAccount_mMember" FromRole="mAccount" ToRole="mMember" />
+        </EntityType>
+        <EntityType Name="memberType">
+          <Key>
+            <PropertyRef Name="mem_type_id" />
+          </Key>
+          <Property Name="mem_type_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="mem_type_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="mMembers" Relationship="Self.FK_mMember_memberType" FromRole="memberType" ToRole="mMember" />
+        </EntityType>
+        <EntityType Name="mMember">
+          <Key>
+            <PropertyRef Name="mem_id" />
+          </Key>
+          <Property Name="mem_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="mem_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mem_address_id" Type="Int32" />
+          <Property Name="mem_email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mem_phone" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="mem_idcard" Type="String" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Name="mem_type_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="borrow_hd" Relationship="Self.FK_borrow_hd_mMember" FromRole="mMember" ToRole="borrow_hd" />
+          <NavigationProperty Name="mAccounts" Relationship="Self.FK_mAccount_mMember" FromRole="mMember" ToRole="mAccount" />
+          <NavigationProperty Name="memberType" Relationship="Self.FK_mMember_memberType" FromRole="mMember" ToRole="memberType" />
+        </EntityType>
+        <Association Name="FK_accountHistory_accountHistory">
+          <End Role="mAccount" Type="Self.mAccount" Multiplicity="0..1" />
+          <End Role="accountHistory" Type="Self.accountHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mAccount">
+              <PropertyRef Name="acc_id" />
+            </Principal>
+            <Dependent Role="accountHistory">
+              <PropertyRef Name="acc_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_borrow_hd_admin">
+          <End Role="admin" Type="Self.admin" Multiplicity="0..1" />
+          <End Role="borrow_hd" Type="Self.borrow_hd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="admin">
+              <PropertyRef Name="admin_id" />
+            </Principal>
+            <Dependent Role="borrow_hd">
+              <PropertyRef Name="admin_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_borrow_dt_borrow_hd1">
+          <End Role="borrow_hd" Type="Self.borrow_hd" Multiplicity="1" />
+          <End Role="borrow_dt" Type="Self.borrow_dt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="borrow_hd">
+              <PropertyRef Name="bor_id" />
+            </Principal>
+            <Dependent Role="borrow_dt">
+              <PropertyRef Name="bor_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_borrow_dt_equipment">
+          <End Role="equipment" Type="Self.equipment" Multiplicity="0..1" />
+          <End Role="borrow_dt" Type="Self.borrow_dt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="equipment">
+              <PropertyRef Name="equ_id" />
+            </Principal>
+            <Dependent Role="borrow_dt">
+              <PropertyRef Name="equ_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_borrow_hd_mMember">
+          <End Role="mMember" Type="Self.mMember" Multiplicity="0..1" />
+          <End Role="borrow_hd" Type="Self.borrow_hd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mMember">
+              <PropertyRef Name="mem_id" />
+            </Principal>
+            <Dependent Role="borrow_hd">
+              <PropertyRef Name="mem_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_equipment_equ_category">
+          <End Role="equ_category" Type="Self.equ_category" Multiplicity="0..1" />
+          <End Role="equipment" Type="Self.equipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="equ_category">
+              <PropertyRef Name="equ_cat_id" />
+            </Principal>
+            <Dependent Role="equipment">
+              <PropertyRef Name="equ_cat_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mAccount_mMember">
+          <End Role="mMember" Type="Self.mMember" Multiplicity="0..1" />
+          <End Role="mAccount" Type="Self.mAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mMember">
+              <PropertyRef Name="mem_id" />
+            </Principal>
+            <Dependent Role="mAccount">
+              <PropertyRef Name="mem_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_mMember_memberType">
+          <End Role="memberType" Type="Self.memberType" Multiplicity="0..1" />
+          <End Role="mMember" Type="Self.mMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="memberType">
+              <PropertyRef Name="mem_type_id" />
+            </Principal>
+            <Dependent Role="mMember">
+              <PropertyRef Name="mem_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="JAOEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="accountHistories" EntityType="Self.accountHistory" />
+          <EntitySet Name="admins" EntityType="Self.admin" />
+          <EntitySet Name="borrow_dt" EntityType="Self.borrow_dt" />
+          <EntitySet Name="borrow_hd" EntityType="Self.borrow_hd" />
+          <EntitySet Name="equ_category" EntityType="Self.equ_category" />
+          <EntitySet Name="equipments" EntityType="Self.equipment" />
+          <EntitySet Name="mAccounts" EntityType="Self.mAccount" />
+          <EntitySet Name="memberTypes" EntityType="Self.memberType" />
+          <EntitySet Name="mMembers" EntityType="Self.mMember" />
+          <AssociationSet Name="FK_accountHistory_accountHistory" Association="Self.FK_accountHistory_accountHistory">
+            <End Role="mAccount" EntitySet="mAccounts" />
+            <End Role="accountHistory" EntitySet="accountHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_borrow_hd_admin" Association="Self.FK_borrow_hd_admin">
+            <End Role="admin" EntitySet="admins" />
+            <End Role="borrow_hd" EntitySet="borrow_hd" />
+          </AssociationSet>
+          <AssociationSet Name="FK_borrow_dt_borrow_hd1" Association="Self.FK_borrow_dt_borrow_hd1">
+            <End Role="borrow_hd" EntitySet="borrow_hd" />
+            <End Role="borrow_dt" EntitySet="borrow_dt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_borrow_dt_equipment" Association="Self.FK_borrow_dt_equipment">
+            <End Role="equipment" EntitySet="equipments" />
+            <End Role="borrow_dt" EntitySet="borrow_dt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_borrow_hd_mMember" Association="Self.FK_borrow_hd_mMember">
+            <End Role="mMember" EntitySet="mMembers" />
+            <End Role="borrow_hd" EntitySet="borrow_hd" />
+          </AssociationSet>
+          <AssociationSet Name="FK_equipment_equ_category" Association="Self.FK_equipment_equ_category">
+            <End Role="equ_category" EntitySet="equ_category" />
+            <End Role="equipment" EntitySet="equipments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mAccount_mMember" Association="Self.FK_mAccount_mMember">
+            <End Role="mMember" EntitySet="mMembers" />
+            <End Role="mAccount" EntitySet="mAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_mMember_memberType" Association="Self.FK_mMember_memberType">
+            <End Role="memberType" EntitySet="memberTypes" />
+            <End Role="mMember" EntitySet="mMembers" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="JAOModelStoreContainer" CdmEntityContainer="JAOEntities">
+          <EntitySetMapping Name="accountHistories">
+            <EntityTypeMapping TypeName="JAOModel.accountHistory">
+              <MappingFragment StoreEntitySet="accountHistory">
+                <ScalarProperty Name="acc_his_id" ColumnName="acc_his_id" />
+                <ScalarProperty Name="acc_his_status" ColumnName="acc_his_status" />
+                <ScalarProperty Name="acc_his_desc" ColumnName="acc_his_desc" />
+                <ScalarProperty Name="acc_id" ColumnName="acc_id" />
+                <ScalarProperty Name="acc_amount_change" ColumnName="acc_amount_change" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="admins">
+            <EntityTypeMapping TypeName="JAOModel.admin">
+              <MappingFragment StoreEntitySet="admin">
+                <ScalarProperty Name="admin_id" ColumnName="admin_id" />
+                <ScalarProperty Name="admin_name" ColumnName="admin_name" />
+                <ScalarProperty Name="admin_address" ColumnName="admin_address" />
+                <ScalarProperty Name="admin_description" ColumnName="admin_description" />
+                <ScalarProperty Name="admin_tell" ColumnName="admin_tell" />
+                <ScalarProperty Name="admin_idcard" ColumnName="admin_idcard" />
+                <ScalarProperty Name="admin_username" ColumnName="admin_username" />
+                <ScalarProperty Name="admin_password" ColumnName="admin_password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="borrow_dt">
+            <EntityTypeMapping TypeName="JAOModel.borrow_dt">
+              <MappingFragment StoreEntitySet="borrow_dt">
+                <ScalarProperty Name="bor_id" ColumnName="bor_id" />
+                <ScalarProperty Name="roworder" ColumnName="roworder" />
+                <ScalarProperty Name="equ_id" ColumnName="equ_id" />
+                <ScalarProperty Name="bor_amount" ColumnName="bor_amount" />
+                <ScalarProperty Name="bor_date" ColumnName="bor_date" />
+                <ScalarProperty Name="bor_wxp" ColumnName="bor_wxp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="borrow_hd">
+            <EntityTypeMapping TypeName="JAOModel.borrow_hd">
+              <MappingFragment StoreEntitySet="borrow_hd">
+                <ScalarProperty Name="bor_id" ColumnName="bor_id" />
+                <ScalarProperty Name="mem_id" ColumnName="mem_id" />
+                <ScalarProperty Name="admin_id" ColumnName="admin_id" />
+                <ScalarProperty Name="create_date" ColumnName="create_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="equ_category">
+            <EntityTypeMapping TypeName="JAOModel.equ_category">
+              <MappingFragment StoreEntitySet="equ_category">
+                <ScalarProperty Name="equ_cat_id" ColumnName="equ_cat_id" />
+                <ScalarProperty Name="equ_cat_name" ColumnName="equ_cat_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="equipments">
+            <EntityTypeMapping TypeName="JAOModel.equipment">
+              <MappingFragment StoreEntitySet="equipment">
+                <ScalarProperty Name="equ_id" ColumnName="equ_id" />
+                <ScalarProperty Name="equ_name" ColumnName="equ_name" />
+                <ScalarProperty Name="equ_cat_id" ColumnName="equ_cat_id" />
+                <ScalarProperty Name="equ_description" ColumnName="equ_description" />
+                <ScalarProperty Name="equ_amount" ColumnName="equ_amount" />
+                <ScalarProperty Name="equ_status" ColumnName="equ_status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="mAccounts">
+            <EntityTypeMapping TypeName="JAOModel.mAccount">
+              <MappingFragment StoreEntitySet="mAccount">
+                <ScalarProperty Name="acc_id" ColumnName="acc_id" />
+                <ScalarProperty Name="acc_name" ColumnName="acc_name" />
+                <ScalarProperty Name="mem_id" ColumnName="mem_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="memberTypes">
+            <EntityTypeMapping TypeName="JAOModel.memberType">
+              <MappingFragment StoreEntitySet="memberType">
+                <ScalarProperty Name="mem_type_id" ColumnName="mem_type_id" />
+                <ScalarProperty Name="mem_type_name" ColumnName="mem_type_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="mMembers">
+            <EntityTypeMapping TypeName="JAOModel.mMember">
+              <MappingFragment StoreEntitySet="mMember">
+                <ScalarProperty Name="mem_id" ColumnName="mem_id" />
+                <ScalarProperty Name="mem_name" ColumnName="mem_name" />
+                <ScalarProperty Name="mem_address_id" ColumnName="mem_address_id" />
+                <ScalarProperty Name="mem_email" ColumnName="mem_email" />
+                <ScalarProperty Name="mem_phone" ColumnName="mem_phone" />
+                <ScalarProperty Name="mem_idcard" ColumnName="mem_idcard" />
+                <ScalarProperty Name="mem_type_id" ColumnName="mem_type_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
